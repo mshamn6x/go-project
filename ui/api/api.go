@@ -49,3 +49,30 @@ func (api *API) Login(username, password string) (LoginResponse, error) {
 	}
 	return res, nil
 }
+
+func GetUsers(jwtToken string) ([]User, error) {
+
+	users := []User{}
+	req, err := http.NewRequest("GET", constants.APIServer+"/users", nil)
+	if err != nil {
+		log.Println("Error in NewRequest ", err)
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+jwtToken)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("Error in Do request ", err)
+		return nil, err
+	}
+
+	err = json.NewDecoder(resp.Body).Decode(&users)
+	if err != nil {
+		log.Println("Error in response decoder ", err)
+		return nil, err
+	}
+
+	return users, nil
+}

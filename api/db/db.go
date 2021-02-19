@@ -24,4 +24,16 @@ func init() {
 		fmt.Println("Unable to creste user table", err)
 		os.Exit(1)
 	}
+
+	err = db.AutoMigrate(&model.CPU{})
+	if err != nil {
+		fmt.Println("Unable to creste CPU table", err)
+		os.Exit(1)
+	}
+
+	err = db.AutoMigrate(&model.RAM{})
+	if err != nil {
+		fmt.Println("Unable to creste RAM table", err)
+		os.Exit(1)
+	}
 }

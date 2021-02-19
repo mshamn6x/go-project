@@ -1,5 +1,65 @@
 <html>
+    <head>  
+        <script>
+        window.onload = function () {
+        
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            theme: "light2",
+            title:{
+                text: "Simple Line Chart"
+            },
+            data: [{        
+                type: "line",
+                  indexLabelFontSize: 16,
+                dataPoints: [
+                    { y: 450 ,x:5},
+                    { y: 414,x:7},
+                    { y: 520,x:5, indexLabel: "\u2191 highest",markerColor: "red", markerType: "triangle" },
+                    { y: 460 ,x:8},
+                    { y: 450 ,x:15},
+                    { y: 500 ,x:25},
+                    { y: 480 ,x:55},
+                    { y: 480 ,x:0},
+                    { y: 410 ,x:100, indexLabel: "\u2193 lowest",markerColor: "DarkSlateGrey", markerType: "cross" }
+                ]
+            }]
+        });
+        chart.render();
+        
+        }
+        </script>
+        </head>
     <body>
         WELCOME {{.Name}}
+
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+            </tr>
+            {{range $i,$user := .Users}}
+<tr>
+            <td>
+                {{$user.Name}}
+            </td>
+            <td>
+                {{$user.Email}}
+            </td>
+            <td>
+                {{$user.Mobile}}
+            </td>
+        </tr>
+
+            {{end}}
+            
+        </table>
+
+
+        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
     </body>
 </html>

@@ -1,10 +1,10 @@
 package router
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 	"new/test/project/ui/api"
+	"text/template"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -55,6 +55,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+type templateData struct {
+	Name  string
+	Users []api.User
+}
+
 func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := store.Get(r, "session-name")
@@ -64,9 +69,9 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templateData := make(map[string]string)
+	// templateData := make(map[string]string)
 
-	templateData["Name"] = session.Values["name"].(string)
+	// templateData["Name"] = session.Values["name"].(string)
 
 	templ, err := template.ParseFiles(`C:\Users\mshanm6x\Downloads\project\ui\views\dashboard.html`)
 	if err != nil {
@@ -74,5 +79,16 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templ.Execute(w, templateData)
+	allUsers, err := api.GetUsers(session.Values["token"].(string))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	template := templateData{
+		Name:  session.Values["name"].(string),
+		Users: allUsers,
+	}
+
+	templ.Execute(w, template)
 }

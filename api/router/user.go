@@ -87,6 +87,38 @@ func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(json_data)
 }
 
+func CPUHandler(w http.ResponseWriter, r *http.Request) {
+	var db_connector db.CPU
+	db_connector = db.NewCPUManger()
+	data, err := db_connector.GetAll()
+	if err != nil {
+		log.Println("Unable to get all CPU percentages")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json_data, _ := json.Marshal(data)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json_data)
+}
+
+func MemHandler(w http.ResponseWriter, r *http.Request) {
+	var db_connector db.RAM
+	db_connector = db.NewRamManger()
+	data, err := db_connector.GetAll()
+	if err != nil {
+		log.Println("Unable to get all memory percentages")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json_data, _ := json.Marshal(data)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json_data)
+}
+
 func UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var user model.User
